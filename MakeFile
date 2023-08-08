@@ -1,0 +1,21 @@
+# Makefile for creating an executable using PyInstaller
+
+# Name of your Python script (without the .py extension)
+SCRIPT_NAME = main
+
+# PyInstaller options
+PYINSTALLER_OPTS = --onefile
+
+# Output directory for the executable
+OUTPUT_DIR = dist
+
+# Targets
+.PHONY: all clean
+
+all: $(OUTPUT_DIR)/$(SCRIPT_NAME)
+
+$(OUTPUT_DIR)/$(SCRIPT_NAME):
+	pyinstaller $(PYINSTALLER_OPTS) $(SCRIPT_NAME).py
+
+clean:
+	rm -rf $(OUTPUT_DIR) build
