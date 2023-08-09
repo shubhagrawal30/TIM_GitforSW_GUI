@@ -6,7 +6,7 @@ import os, webbrowser, subprocess, shutil, stat
 CONFIG_FILE = ".TIM_SW_GitHub_Tool_Config"
 PATH = None
 DEPTH = None
-DEFAULT_DEPTH = "2"
+DEFAULT_DEPTH = "1"
 GITHUB_URL = "https://github.com/tim-balloon/tim-mechanical_drawings"
 GIT_REPO = GITHUB_URL.split("/")[-1]
 
@@ -25,9 +25,15 @@ def pull_click():
 def push_click():
     cwd = os.getcwd()
     commit_message = "Update"
-    def get_commit_message():
+    def commit():
         global commit_message
         commit_message = entry1.get()
+        subprocess.run(["git", "commit", "-m", commit_message])
+
+    def push():
+        input_window.destroy()
+        subprocess.run(["git", "push"])
+
     label.config(text="Pushing to GitHub...")
 
     if os.path.exists(os.path.join(PATH, GIT_REPO)):
@@ -40,17 +46,14 @@ def push_click():
         label1 = tk.Label(input_window, text="Commit Message:")
         entry1 = tk.Entry(input_window, width=60)
         entry1.insert(0, "Update")
-        save_button = tk.Button(input_window, text="Commit", command=get_commit_message)
-        exit_button = tk.Button(input_window, text="Push", command=input_window.destroy)
-        entry1.bind("<Return>", lambda event: get_commit_message)
+        commit_button = tk.Button(input_window, text="Commit", command=commit)
+        push_button = tk.Button(input_window, text="Push", command=push)
+        entry1.bind("<Return>", lambda event: commit)
 
         label1.grid(row=0, column=0, padx=10, pady=5, sticky="e")
         entry1.grid(row=0, column=1, padx=10, pady=5)
-        save_button.grid(row=1, column=0, padx=10, pady=5, sticky="e")
-        exit_button.grid(row=1, column=1, padx=10, pady=5, sticky="e")
-
-        subprocess.run(["git", "commit", "-m", commit_message])
-        subprocess.run(["git", "push"])
+        commit_button.grid(row=1, column=0, padx=10, pady=5, sticky="e")
+        push_button.grid(row=1, column=1, padx=10, pady=5, sticky="e")
     else:
         label.config(text="Please pull from GitHub first")
     os.chdir(cwd)
@@ -194,7 +197,6 @@ def check_config_file_existence():
         label.config(text="Please set PATH using Settings first")
 
     if PATH:
-        print(PATH, os.path.exists(PATH))
         if not os.path.exists(PATH):
             label.config(text="Given PATH does not exist. Please set PATH using Settings first")
             for button in buttons:
