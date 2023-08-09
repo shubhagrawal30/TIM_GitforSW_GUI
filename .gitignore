@@ -161,3 +161,4 @@ cython_debug/
 
 **/.TIM_SW_GitHub_Tool_Config
 !dist/TIM_GitforSW_GUI.exe
+**/tim-mechanical_drawings
