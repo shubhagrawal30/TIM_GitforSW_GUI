@@ -15,7 +15,7 @@ def pull_click():
     label.config(text="Pulling from GitHub...")
     if os.path.exists(os.path.join(PATH, GIT_REPO)):    
         os.chdir(os.path.join(PATH, GIT_REPO))
-        subprocess.run(["git", "pull", f"--depth{DEPTH}"])
+        subprocess.run(["git", "pull", f"--depth={DEPTH}"])
     else:
         os.chdir(PATH)
         subprocess.run(["git", "clone", f"--depth={DEPTH}", GITHUB_URL])
