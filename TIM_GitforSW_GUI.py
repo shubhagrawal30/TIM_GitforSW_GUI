@@ -7,6 +7,7 @@ CONFIG_FILE = ".TIM_SW_GitHub_Tool_Config"
 PATH = None
 DEPTH = None
 DEFAULT_DEPTH = "1"
+DEFAULT_COMMIT_MESSAGE = "Update"
 GITHUB_URL = "https://github.com/tim-balloon/tim-mechanical_drawings"
 GIT_REPO = GITHUB_URL.split("/")[-1]
 
@@ -24,28 +25,30 @@ def pull_click():
 
 def push_click():
     cwd = os.getcwd()
-    commit_message = "Update"
     def commit():
-        global commit_message
+        os.chdir(os.path.join(PATH, GIT_REPO))
         commit_message = entry1.get()
         subprocess.run(["git", "commit", "-m", commit_message])
+        os.chdir(cwd)
 
     def push():
-        input_window.destroy()
+        os.chdir(os.path.join(PATH, GIT_REPO))
         subprocess.run(["git", "push"])
+        os.chdir(cwd)
 
     label.config(text="Pushing to GitHub...")
 
     if os.path.exists(os.path.join(PATH, GIT_REPO)):
         os.chdir(os.path.join(PATH, GIT_REPO))
         subprocess.run(["git", "add", "."])
+        os.chdir(cwd)
         
         input_window = tk.Toplevel(root)
         input_window.title("Commit Message")
 
         label1 = tk.Label(input_window, text="Commit Message:")
         entry1 = tk.Entry(input_window, width=60)
-        entry1.insert(0, "Update")
+        entry1.insert(0, DEFAULT_COMMIT_MESSAGE)
         commit_button = tk.Button(input_window, text="Commit", command=commit)
         push_button = tk.Button(input_window, text="Push", command=push)
         entry1.bind("<Return>", lambda event: commit)
@@ -56,7 +59,6 @@ def push_click():
         push_button.grid(row=1, column=1, padx=10, pady=5, sticky="e")
     else:
         label.config(text="Please pull from GitHub first")
-    os.chdir(cwd)
     label.config(text="Pushing to GitHub...Done!")
     
 
