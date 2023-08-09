@@ -73,6 +73,17 @@ def refresh_click():
     os.chdir(cwd)
     label.config(text="Refreshing...Done!")
 
+def restore_click():
+    cwd = os.getcwd()
+    label.config(text="Restoring...")
+    if os.path.exists(os.path.join(PATH, GIT_REPO)):
+        os.chdir(os.path.join(PATH, GIT_REPO))
+        subprocess.run(["git", "restore", "."])
+    else:
+        label.config(text="Please pull from GitHub first")
+    os.chdir(cwd)
+    label.config(text="Restoring...Done!")
+
 def exit_click():
     root.quit()
 
@@ -135,44 +146,44 @@ def open_mailto_link(event):
 # Create the main window
 root = tk.Tk()
 root.title("TIM SolidWorks GitHub Tool")
-root.geometry("450x250")  # Set the initial window size
+root.geometry("450x300")  # Set the initial window size
 
 # Create style for buttons
 style = ttk.Style()
 style.configure("TButton", padding=10, font=("Helvetica", 12))
+style.configure("Red.TButton", padding=10, font=("Helvetica", 12, "italic"), \
+                background="red")
 
 # Create buttons
 pull_button = ttk.Button(root, text="Pull", command=pull_click)
 push_button = ttk.Button(root, text="Push", command=push_click)
-refresh_button = ttk.Button(root, text="Refresh", command=refresh_click)
+restore_button = ttk.Button(root, text="Restore", command=restore_click, style="Red.TButton")
+refresh_button = ttk.Button(root, text="Refresh", command=refresh_click, style="Red.TButton")
 exit_button = ttk.Button(root, text="Exit", command=exit_click)
 settings_button = ttk.Button(root, text="Settings", command=settings_click)
 
 # Create a label to display messages
 label = tk.Label(root, text="Welcome!", font=("Helvetica", 10))
-email = tk.Label(root, text="Contact Shubh for help or comments", \
+email = tk.Label(root, text="Contact Shubh (shubh@sas.upenn.edu) for help or comments", \
                  font=("Helvetica", 10, "underline italic"), fg="blue", cursor="hand2")
 email.bind("<Button-1>", open_mailto_link)
 
 # Arrange widgets using the grid layout manager
-label.grid(row=0, column=0, columnspan=3, padx=20, pady=20)
-pull_button.grid(row=1, column=0, padx=10, pady=10, columnspan=1, sticky="ew")
-push_button.grid(row=1, column=1, padx=10, pady=10, columnspan=1, sticky="ew")
-refresh_button.grid(row=1, column=2, padx=10, pady=10, columnspan=1, sticky="ew")
-settings_button.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-exit_button.grid(row=2, column=2, padx=10, pady=10, sticky="e")
-email.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+label.grid(row=0, column=0, columnspan=7, padx=20, pady=20)
+pull_button.grid(row=1, column=0, padx=10, pady=10, columnspan=3, sticky="ew")
+push_button.grid(row=1, column=4, padx=10, pady=10, columnspan=4, sticky="ew")
+refresh_button.grid(row=2, column=0, padx=10, pady=10, columnspan=3, sticky="ew")
+restore_button.grid(row=2, column=4, padx=10, pady=10, columnspan=4, sticky="ew")
+settings_button.grid(row=3, column=0, padx=10, pady=10, columnspan=2, sticky="w")
+exit_button.grid(row=3, column=5, padx=10, pady=10, columnspan=2, sticky="e")
+email.grid(row=4, column=0, columnspan=7, padx=10, pady=10)
 
-# Add row weights to allow resizing
-root.grid_rowconfigure(1, weight=1)
-root.grid_rowconfigure(2, weight=1)
-root.grid_columnconfigure(0, weight=1)
-root.grid_columnconfigure(1, weight=1)
-root.grid_columnconfigure(2, weight=1)
+[root.rowconfigure(ind, weight=1) for ind in range(5)]
+[root.columnconfigure(ind, weight=1) for ind in range(7)]
 
 def check_config_file_existence():
     global DEPTH, PATH
-    buttons = [pull_button, push_button, refresh_button]
+    buttons = [pull_button, push_button, refresh_button, restore_button]
     if os.path.exists(CONFIG_FILE):
         for button in buttons:
             button.config(state="enabled")
