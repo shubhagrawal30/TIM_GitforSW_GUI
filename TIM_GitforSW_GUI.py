@@ -194,6 +194,7 @@ def check_config_file_existence():
         label.config(text="Please set PATH using Settings first")
 
     if PATH:
+        print(PATH, os.path.exists(PATH))
         if not os.path.exists(PATH):
             label.config(text="Given PATH does not exist. Please set PATH using Settings first")
             for button in buttons:

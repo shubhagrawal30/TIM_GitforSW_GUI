@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 **/.TIM_SW_GitHub_Tool_Config
-!dist/main.exe
+!dist/TIM_GitforSW_GUI.exe
