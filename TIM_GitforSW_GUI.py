@@ -6,7 +6,7 @@ import os, webbrowser, subprocess, shutil, stat
 CONFIG_FILE = ".TIM_SW_GitHub_Tool_Config"
 PATH = None
 DEPTH = None
-DEFAULT_DEPTH = "2"
+DEFAULT_DEPTH = "1"
 GITHUB_URL = "https://github.com/tim-balloon/tim-mechanical_drawings"
 GIT_REPO = GITHUB_URL.split("/")[-1]
 
@@ -15,7 +15,7 @@ def pull_click():
     label.config(text="Pulling from GitHub...")
     if os.path.exists(os.path.join(PATH, GIT_REPO)):    
         os.chdir(os.path.join(PATH, GIT_REPO))
-        subprocess.run(["git", "pull", f"--depth{DEPTH}"])
+        subprocess.run(["git", "pull", f"--depth={DEPTH}"])
     else:
         os.chdir(PATH)
         subprocess.run(["git", "clone", f"--depth={DEPTH}", GITHUB_URL])
@@ -194,7 +194,6 @@ def check_config_file_existence():
         label.config(text="Please set PATH using Settings first")
 
     if PATH:
-        print(PATH, os.path.exists(PATH))
         if not os.path.exists(PATH):
             label.config(text="Given PATH does not exist. Please set PATH using Settings first")
             for button in buttons:
